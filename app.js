@@ -1,6 +1,12 @@
-var getPixiver = require('./getPixiver');
+var Util = require('./Util');
 
-var ID = '1184799';
+var ID = '5481866';
 var originUrl = 'http://www.pixiv.net/member_illust.php?id=9427';
 
-getPixiver(ID);
+var options = {
+	collection:30000
+};
+
+//Util.getCollection(ID,options);
+Util.getCollection(ID,options);
+//Util.getPixiver(ID);

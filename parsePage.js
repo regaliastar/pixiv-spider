@@ -12,8 +12,8 @@ createOption = require('./requestHeader'),
 events = require('events'),
 download = require('./download');
 
-function parsePage(ID,originUrl){
-
+function parsePage(ID,originUrl,OPTIONS){
+	console.log('originUrl:'+originUrl);
 	var header = createOption(originUrl);
 	request(header,function(err,res){
 		if(err){
@@ -22,14 +22,27 @@ function parsePage(ID,originUrl){
 		}
 		var $ = cheerio.load(res.body);
 		var Urls = [];
+		if(!OPTIONS){
+			$('._image-items').children().each(function(i,elem){
+				Urls.push('http://www.pixiv.net'+$(this).children().first().attr('href'));
+				//console.log('2 push:'+'http://www.pixiv.net'+$(this).children().first().attr('href'));
+			});
+		}else{
+			$('._image-items').children().each(function(i,elem){
+				let Colle = $(this).children().last().children().children().text().trim();
+				var collection = OPTIONS.collection || 10000;
+				if(Colle >= collection){
+					Urls.push('http://www.pixiv.net/'+$(this).children().first().attr('href'));
+					//console.log('3 push:'+'http://www.pixiv.net/'+$(this).children().first().attr('href'));
+				}
 
-		$('._image-items').children().each(function(i,elem){
-			Urls.push('http://www.pixiv.net'+$(this).children().first().attr('href'));
+			});
+		}
 
-		});
 		console.log('共有：'+Urls.length+'个URL等待处理');
 		async.mapLimit(Urls,5,function(url,callback){
 			console.log('正在访问：'+url);
+			if(!url){return;}
 			var imgHeader = createOption(url);
 			request(imgHeader,function(err,res){
 				if(err){
@@ -48,11 +61,15 @@ function parsePage(ID,originUrl){
 			
 			//图片名称
 			var imgName = $('img[class=original-image]').attr('alt')+postfix || Date.now()+Math.random()*1000+postfix;
-
-			download(oriImgUrl,imgName,ID);
+			if(!OPTIONS){
+				download(oriImgUrl,imgName,ID);
+			}else{
+				download(oriImgUrl,imgName,ID+'/collection');
+			}
+			
 			
 			callback();		//若没有callback(),则只会执行并行数量的任务
-		});
+		}).on('error',function(){console.log('request in async in parsePage.js error');});
 		},function(err,callback){
 			if(err){
 				console.log(err);
@@ -60,7 +77,7 @@ function parsePage(ID,originUrl){
 			console.log('fin');
 		})
 
-	})	
+	}).on('error',function(){console.log('request in parsePage.js error');})	
 
 }
 

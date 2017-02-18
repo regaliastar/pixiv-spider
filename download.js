@@ -16,8 +16,8 @@ function download(url,fn,author){
     }
     var id= url.substring(url.lastIndexOf('/')+1,url.indexOf('_'));
 
-    var rep = /i[0-9].pixiv.net/;
-    var host = rep.exec(url)[0];
+    var reg = /i[0-9].pixiv.net/;
+    var host = reg.exec(url)[0];
     var options = {
         url: url,
         headers: {
@@ -36,9 +36,9 @@ function download(url,fn,author){
 
 
     request(options)
-        .on('error',function(err){console.log(' on error:'+err);return;})
+        .on('error',function(err){console.log('error in download:'+err);return;})
             .pipe(fs.createWriteStream('./'+author+'/'+fn))
-                .on('error',function(err){console.log(' on last error:'+err);return;})
+                .on('error',function(err){console.log('error in download:'+err);return;})
                     .on('close', function(){console.log(fn+'下载完成');});
 
 }
