@@ -1,4 +1,5 @@
 /**
+ *Date:2017/2/18
  *功能：传入作者的ID号和URL，从缩略图中找到原图并下载
  *originUrl format: http://www.pixiv.net/member_illust.php?id=9427
  */

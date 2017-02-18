@@ -35,7 +35,11 @@ function download(url,fn,author){
     };
 
 
-    request(options).pipe(fs.createWriteStream('./'+author+'/'+fn)).on('close', function(){console.log(fn+'下载完成');});
+    request(options)
+        .on('error',function(err){console.log(' on error:'+err);return;})
+            .pipe(fs.createWriteStream('./'+author+'/'+fn))
+                .on('error',function(err){console.log(' on last error:'+err);return;})
+                    .on('close', function(){console.log(fn+'下载完成');});
 
 }
 
