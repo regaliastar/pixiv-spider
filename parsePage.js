@@ -9,7 +9,6 @@ fs = require('fs'),
 async = require('async'),
 cheerio = require('cheerio'),
 createOption = require('./requestHeader'),
-events = require('events'),
 download = require('./download');
 
 function parsePage(ID,originUrl,OPTIONS){
@@ -40,7 +39,7 @@ function parsePage(ID,originUrl,OPTIONS){
 		}
 
 		console.log('共有：'+Urls.length+'个URL等待处理');
-		async.mapLimit(Urls,5,function(url,callback){
+		async.mapLimit(Urls,2,function(url,callback){
 			console.log('正在访问：'+url);
 			if(!url){return;}
 			var imgHeader = createOption(url);

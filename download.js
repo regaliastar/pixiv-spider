@@ -1,13 +1,13 @@
 var fs = require('fs');
 var request = require('request');
 
-/*url format: http://i2.pixiv.net/c/600x600/img-master/img/2014/08/14/23/06/55/45358677_p0_master1200.jpg*/
+//url format: http://i2.pixiv.net/c/600x600/img-master/img/2014/08/14/23/06/55/45358677_p0_master1200.jpg
 function download(url,fn,author){
     if(author !== undefined && !fs.existsSync('./'+author+'/')){
         fs.mkdirSync('./'+author+'/');
     }
     if(!url) {
-        console.log("Must specify a url");
+        console.log("必须指定一个URL！");
         return;
     }
     if(fn.indexOf('.jpg') == -1 && fn.indexOf('.png') == -1 && fn.indexOf('.gif') == -1){
