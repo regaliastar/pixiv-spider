@@ -33,4 +33,13 @@ var header = createOption(host+querystr);
 console.log('konosuba:'+encodeURI(konosuba));*/
 var log = require('./log');
 
-log('111');
+//log('111');
+var str = '45/65\\55';
+
+
+String.prototype.formatFilename = function(){
+	if(!this)	return;
+	return this.replace(/\\/g,'.').replace(/\//g,'.');
+}
+
+console.log(str.formatFilename());

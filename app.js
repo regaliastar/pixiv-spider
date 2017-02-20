@@ -4,13 +4,13 @@ var Util = require('./Util');
 var ID = '3066815';
 
 var options = {
-	collection:1000
+	collection:100
 };
 
 
 //Util.getPixiver(ID);
-Util.getCollection(ID,options);
+//Util.getCollection(ID,options);
 //Util.getGlobalRank();
 //Util.getByTag('この素晴らしい世界に祝福を!',options);
-//Util.getByTag('女子高生',options);
-//女子高生 : sP%3F
+Util.getByTag('崩坏3',options);
+

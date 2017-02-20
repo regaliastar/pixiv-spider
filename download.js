@@ -2,6 +2,10 @@ var fs = require('fs'),
  request = require('request'),
  log = require('./log');
 
+String.prototype.formatFilename = function(){
+    if(!this)   return;
+    return this.replace(/\\/g,'.').replace(/\//g,'.');
+}
 
 //url format: http://i2.pixiv.net/c/600x600/img-master/img/2014/08/14/23/06/55/45358677_p0_master1200.jpg
 function download(url,fn,author){
@@ -24,6 +28,7 @@ function download(url,fn,author){
     }
     var id= url.substring(url.lastIndexOf('/')+1,url.indexOf('_'));
 
+    var filename = fn.formatFilename();
     var reg = /i[0-9].pixiv.net/;
     var host = reg.exec(url)[0];
     var options = {
@@ -44,10 +49,10 @@ function download(url,fn,author){
 
 
     request(options)
-        .on('error',function(err){console.log('error in download:'+err);log('error in download:'+err+' 作者ID：'+id);again(url,fn,author);return;})
-            .pipe(fs.createWriteStream('./'+author+'/'+fn))
-                .on('error',function(err){console.log('error in download:'+err);log('error in download:'+err+' 作者ID：'+id);again(url,fn,author);return;})
-                    .on('close', function(){console.log(fn+'下载完成');});
+        .on('error',function(err){console.log('error in download:'+err);log('error in download:'+err+' 作者ID：'+id);again(url,filename,author);return;})
+            .pipe(fs.createWriteStream('./'+author+'/'+filename))
+                .on('error',function(err){console.log('error in download:'+err);log('error in download:'+err+' 作者ID：'+id);again(url,filename,author);return;})
+                    .on('close', function(){console.log(filename+'下载完成');});
 
 }
 
