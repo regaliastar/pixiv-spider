@@ -1,8 +1,16 @@
-var fs = require('fs');
-var request = require('request');
+var fs = require('fs'),
+ request = require('request'),
+ log = require('./log');
+
 
 //url format: http://i2.pixiv.net/c/600x600/img-master/img/2014/08/14/23/06/55/45358677_p0_master1200.jpg
 function download(url,fn,author){
+    if(author.indexOf('/') != -1){
+        var outFile = author.split('/')[0];
+        if(!fs.existsSync('./'+outFile+'/')){
+            fs.mkdirSync('./'+outFile+'/');
+        }
+    }
     if(author !== undefined && !fs.existsSync('./'+author+'/')){
         fs.mkdirSync('./'+author+'/');
     }
@@ -36,11 +44,17 @@ function download(url,fn,author){
 
 
     request(options)
-        .on('error',function(err){console.log('error in download:'+err);return;})
+        .on('error',function(err){console.log('error in download:'+err);log('error in download:'+err+' 作者ID：'+id);again(url,fn,author);return;})
             .pipe(fs.createWriteStream('./'+author+'/'+fn))
-                .on('error',function(err){console.log('error in download:'+err);return;})
+                .on('error',function(err){console.log('error in download:'+err);log('error in download:'+err+' 作者ID：'+id);again(url,fn,author);return;})
                     .on('close', function(){console.log(fn+'下载完成');});
 
+}
+
+function again(url,fn,author){
+    setTimeout(function(){
+        download(url,fn,author);
+    },10000);
 }
 
 module.exports = download;

@@ -1,6 +1,6 @@
 /**
  *Date:2017/2/18
- *功能：传入作者的ID号和URL，从缩略图中找到原图并下载
+ *功能：传入作者的ID号和URL，从一个页面内的所有缩略图中找到原图并下载
  *originUrl format: http://www.pixiv.net/member_illust.php?id=9427
  */
 
@@ -9,6 +9,7 @@ fs = require('fs'),
 async = require('async'),
 cheerio = require('cheerio'),
 createOption = require('./requestHeader'),
+log = require('./log');
 download = require('./download');
 
 function parsePage(ID,originUrl,OPTIONS){
@@ -24,15 +25,13 @@ function parsePage(ID,originUrl,OPTIONS){
 		if(!OPTIONS){
 			$('._image-items').children().each(function(i,elem){
 				Urls.push('http://www.pixiv.net'+$(this).children().first().attr('href'));
-				//console.log('2 push:'+'http://www.pixiv.net'+$(this).children().first().attr('href'));
 			});
 		}else{
 			$('._image-items').children().each(function(i,elem){
-				let Colle = $(this).children().last().children().children().text().trim();
+				let Colle = $(this).children().last().children().children().text().trim() || '0';
 				var collection = OPTIONS.collection || 10000;
 				if(Colle >= collection){
 					Urls.push('http://www.pixiv.net/'+$(this).children().first().attr('href'));
-					//console.log('3 push:'+'http://www.pixiv.net/'+$(this).children().first().attr('href'));
 				}
 
 			});
@@ -49,8 +48,7 @@ function parsePage(ID,originUrl,OPTIONS){
 					return;
 				}
 				var $ = cheerio.load(res.body);
-			//中等大小图片600*600
-			var midImgUrl = $('._layout-thumbnail').children().first().attr('src');
+
 			//原始大小图片1400*1400
 			var oriImgUrl = $('img[class=original-image]').attr('data-src');
 			//图片后缀
@@ -68,7 +66,7 @@ function parsePage(ID,originUrl,OPTIONS){
 			
 			
 			callback();		//若没有callback(),则只会执行并行数量的任务
-		}).on('error',function(){console.log('request in async in parsePage.js error');});
+		}).on('error',function(){console.log('request in async in parsePage.js error');log('request in async in parsePage.js error');});
 		},function(err,callback){
 			if(err){
 				console.log(err);
@@ -76,7 +74,7 @@ function parsePage(ID,originUrl,OPTIONS){
 			console.log('fin');
 		})
 
-	}).on('error',function(){console.log('request in parsePage.js error');})	
+	}).on('error',function(){console.log('request in parsePage.js error');log('request in parsePage.js error');})	
 
 }
 
