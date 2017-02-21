@@ -25,9 +25,9 @@ function parse(ID,URL,OPTIONS){
 		var $ = cheerio.load(res.body);
 	
 		if(OPTIONS){
-			parsePage(ID,INDEX,OPTIONS);
+			parsePage.parsePage(ID,INDEX,OPTIONS);
 		}else{
-			parsePage(ID,INDEX);
+			parsePage.parsePage(ID,INDEX);
 		}
 
 		var NEXT = $('.next').first().children().attr('href');
@@ -58,10 +58,10 @@ function getByTag(TAG,URL,OPTIONS){
 
 		var no_item = $('._no-item').text();
 		if(no_item == '未找到任何相关结果'){
-			console.log('未找到任何相关结果，请使用日文原名搜索');
+			console.log('未找到任何相关结果，可尝试使用日文原名搜索');
 			return;
 		}else{
-			parsePage(TAG,INDEX,OPTIONS);
+			parsePage.parsePage(TAG,INDEX,OPTIONS);
 		}
 
 		var NEXT = $('.next').first().children().attr('href');	//为了解决原网页的十六进制字符串在request接收后自动转码的问题，将TAG的值直接传入
@@ -121,11 +121,11 @@ var Util = {
 			var Urls = [];
 			var host = 'http://www.pixiv.net/';
 			$('.ranking-items').children().each(function(i,item){
-				var part = $(this).children().first().next().children().attr('href')+'_'+$(this).attr('id')+'.';
+				var part = $(this).children().first().next().children().attr('href')+'_'+$(this).attr('id')+'-';
 				Urls.push(host+part);
 			});
 			
-			async.mapLimit(Urls,3,function(url,callback){
+			async.mapLimit(Urls,2,function(url,callback){
 				var rank = url.getRankNumber();
 				var realUrl = url.getUrl();
 				var newHeader = createOption(realUrl);
@@ -142,13 +142,18 @@ var Util = {
 					//图片后缀
 					if(oriImgUrl){
 						var postfix = oriImgUrl.trim().substr(oriImgUrl.length-4) || '.png';
+					
+						//图片名称
+						var imgName = $('img[class=original-image]').attr('alt')+postfix || Date.now()+Math.random()*1000+postfix;
+						download(oriImgUrl,rank+imgName,filename);
+					}else{
+						var mutilName = $('.ui-expander-target').children('.title').text().formatFilename();
+						parsePage.parseMutil(filename+'/'+rank+mutilName,$);
 					}
-					//图片名称
-					var imgName = $('img[class=original-image]').attr('alt')+postfix || Date.now()+Math.random()*1000+postfix;
-					download(oriImgUrl,rank+imgName,filename);
 
 					callback();
 				}).on('error',function(){console.log('request in async in getGlobalRank error');log('request in getByTag error');});
+
 			},function(err,callback){
 				if(err){
 					console.log(err);
@@ -161,7 +166,7 @@ var Util = {
 
 	getByTag: function(TAG,OPTIONS){
 		//encodeURI()函数将字符串转化成符合URI的格式，使得请求能够到达
-		var INDEX = 'http://www.pixiv.net/search.php?word='+encodeURI(TAG);
+		var INDEX = 'http://www.pixiv.net/search.php?s_mode=s_tag&word='+encodeURI(TAG);
 		getByTag(TAG,INDEX,OPTIONS);
 	}
 

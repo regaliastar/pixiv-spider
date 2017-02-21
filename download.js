@@ -7,7 +7,12 @@ String.prototype.formatFilename = function(){
     return this.replace(/\\/g,'.').replace(/\//g,'.');
 }
 
-//url format: http://i2.pixiv.net/c/600x600/img-master/img/2014/08/14/23/06/55/45358677_p0_master1200.jpg
+
+/**
+ *传入三个参数：url为原图地址，fn为文件名，author为文件保存的路径
+ *url format: http://i2.pixiv.net/c/600x600/img-master/img/2014/08/14/23/06/55/45358677_p0_master1200.jpg
+ */
+//
 function download(url,fn,author){
     if(author.indexOf('/') != -1){
         var outFile = author.split('/')[0];

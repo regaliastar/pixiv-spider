@@ -45,31 +45,35 @@ function parsePage(ID,originUrl,OPTIONS){
 			request(imgHeader,function(err,res){
 				if(err){
 					console.log(err);
+					log(err);
 					return;
 				}
 				var $ = cheerio.load(res.body);
 
-			//原始大小图片1400*1400
-			var oriImgUrl = $('img[class=original-image]').attr('data-src');
-			//图片后缀
-			if(oriImgUrl){
-				var postfix = oriImgUrl.trim().substr(oriImgUrl.length-4) || '.png';
-			}
+				//原始大小图片1400*1400
+				var oriImgUrl = $('img[class=original-image]').attr('data-src');
+				//图片后缀
+				if(oriImgUrl){
+					var postfix = oriImgUrl.trim().substr(oriImgUrl.length-4) || '.png';
 			
-			//图片名称
-			var imgName = $('img[class=original-image]').attr('alt')+postfix || Date.now()+Math.random()*1000+postfix;
-			if(!OPTIONS){
-				download(oriImgUrl,imgName,ID);
-			}else{
-				download(oriImgUrl,imgName,ID+'/collection');
-			}
+				//图片名称
+					var imgName = $('img[class=original-image]').attr('alt')+postfix || Date.now()+Math.random()*1000+postfix;
+					if(!OPTIONS){
+						download(oriImgUrl,imgName,ID);
+					}else{
+						download(oriImgUrl,imgName,ID+'/collection');
+					}
+				}else{
+					var mutilName = $('.ui-expander-target').children('.title').text().formatFilename();
+					parseMutil(ID+'/'+mutilName,$);
+				}
 			
-			
-			callback();		//若没有callback(),则只会执行并行数量的任务
-		}).on('error',function(){console.log('request in async in parsePage.js error');log('request in async in parsePage.js error');});
+				callback();		//若没有callback(),则只会执行并行数量的任务
+			}).on('error',function(){console.log('request in async in parsePage.js error');log('request in async in parsePage.js error');});
 		},function(err,callback){
 			if(err){
 				console.log(err);
+				log(err);
 			}
 			console.log('fin');
 		})
@@ -78,4 +82,53 @@ function parsePage(ID,originUrl,OPTIONS){
 
 }
 
-module.exports = parsePage;
+/**
+ *Date:2017/2/21
+ *解析包含多幅图的图包并下载
+ *
+ *传入参数：$是当前页面，fn指的是创建的文件夹的路径
+ */
+function parseMutil(fn,$){
+	var url = 'http://www.pixiv.net/'+$('._work.multiple').first().attr('href');
+	var header = createOption(url);
+	request(header,function(err,res){
+		if(err){
+			console.log(err);
+			log(err);
+			return;
+		}
+		var $ = cheerio.load(res.body);
+
+		var Urls = [];
+		$('.item-container').each(function(i,item){
+			Urls.push($(this).children('.image').attr('data-src'));
+		});
+
+		if(Urls.length == 0)	return;
+		var count = 0;
+		async.mapLimit(Urls,2,function(url,callback){
+			var postfix = url.trim().substr(url.length-4) || '.png';
+			count++;
+			var imgName = count+''+postfix || Date.now()+Math.random()*1000+postfix;
+			download(url,imgName,fn);
+
+			callback();
+		},function(err,callback){
+			if(err){
+				console.log(err);
+				log(err);
+			}
+			console.log('fin');
+		})
+
+	}).on('error',function(){console.log('request in parseMutil in parsePage.js error');log('request in parseMutil in parsePage.js error');});
+
+}
+
+String.prototype.formatFilename = function(){
+    if(!this)   return;
+    return this.replace(/\\/g,'.').replace(/\//g,'.');
+}
+
+exports.parsePage = parsePage;
+exports.parseMutil = parseMutil;
