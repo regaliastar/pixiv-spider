@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>下载文件选择</title>
+ </head>
+ <body>
+  <h1>请选择下载文件：</h1>
+  <% if(files.length>0) {%>
+  <ul>
+   <% files.forEach(function(file){ %>
+   <li>
+    <a href="/file/<%- file %>" target="_blank"><%- file %></a>
+   </li>
+   <%})%>
+  </ul>
+  <%} else {%>
+  <p>没有可下载文件…</p>
+  <%}%>
+ </body>
+</html>
