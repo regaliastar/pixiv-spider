@@ -54,9 +54,9 @@ function download(url,fn,author){
 
 
     request(options)
-        .on('error',function(err){console.log('error in download:'+err);log('error in download:'+err+' 作者ID：'+id);again(url,filename,author);return;})
+        .on('error',function(err){console.log('error in download:'+err);log('error in download:'+err+' 作者ID：'+id);return;})
             .pipe(fs.createWriteStream('./'+author+'/'+filename))
-                .on('error',function(err){console.log('error in download:'+err);log('error in download:'+err+' 作者ID：'+id);again(url,filename,author);return;})
+                .on('error',function(err){console.log('error in download:'+err);log('error in download:'+err+' 作者ID：'+id);return;})
                     .on('close', function(){console.log(filename+'下载完成');});
 
 }

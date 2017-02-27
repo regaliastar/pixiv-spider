@@ -39,7 +39,7 @@ function parse(ID,URL,OPTIONS){
 				}else{
 					parse(ID,NEXT_URL,OPTIONS);
 				}
-			},2000);
+			},1000);
 		}
 
 	}).on('error',function(){console.log('request in parse error');log('request in getByTag error');});
@@ -125,7 +125,7 @@ var Util = {
 				Urls.push(host+part);
 			});
 			
-			async.mapLimit(Urls,2,function(url,callback){
+			async.mapLimit(Urls,5,function(url,callback){
 				var rank = url.getRankNumber();
 				var realUrl = url.getUrl();
 				var newHeader = createOption(realUrl);

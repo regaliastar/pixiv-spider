@@ -20,6 +20,7 @@ function parsePage(ID,originUrl,OPTIONS){
 			console.log(err);
 			return;
 		}
+		console.log('正在访问：'+originUrl);
 		var $ = cheerio.load(res.body);
 		var Urls = [];
 		if(!OPTIONS){
@@ -97,6 +98,7 @@ function parseMutil(fn,$){
 			log(err);
 			return;
 		}
+		console.log('正在访问：'+url);
 		var $ = cheerio.load(res.body);
 
 		var Urls = [];
