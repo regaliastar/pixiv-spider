@@ -16,6 +16,13 @@ Util.getByTag('kiana',options);
 //Util.getByTag('崩坏3',options);
 */
 
-var zip = require('./zip');
+/*var zip = require('./zip');
 
-zip('kiana');
+zip('kiana');*/
+var Util = require('./Util');
+var options = {
+	collection:1000
+};
+
+
+Util.getGlobalRank();

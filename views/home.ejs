@@ -1,20 +1,70 @@
 <!DOCTYPE html>
 <html>
- <head>
+<head>
   <title>下载文件选择</title>
- </head>
- <body>
-  <h1>请选择下载文件：</h1>
-  <% if(files.length>0) {%>
-  <ul>
-   <% files.forEach(function(file){ %>
-   <li>
-    <a href="/download/<%- file %>" target="_blank"><%- file %></a>
-   </li>
-   <%})%>
+  <script src="http://code.jquery.com/jquery-latest.js"></script>
+  <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+</head>
+<style> 
+ body{
+  min-height: 1500px; 
+} 
+</style>
+<body>
+  <div class="signup-form">
+    <div class="signup-form__logo-box">
+      <div class="signup-form__logo"></div>
+      <div class="signup-form__catchphrase">让创作变得更有乐趣</div>
+    </div>
+    <div id="container-login">
+      <div data-reactroot="">
+        <span>
+          <form action="/download">
+            <div class="input-field-group">
+              <div class="input-field">
+                <input class="tele" placeholder="XXX模式" autocapitalize="on" type="text">
+              </div>
+              <div class="input-field">
+                <input class="password" placeholder="密码" autocapitalize="off" type="password">
+              </div>
+            </div>
+            <ul class="error-msg-list">
+              <li id="pw-wrong" class="error-msg-list__item" style="display: none;">密码不正确，请重新输入</li>
+              <li id="waiting" class="error-msg-list__item" style="display: none;">正在登录，请稍等...</li>
+            </ul>
+            <li id="other-wrong"></li>
+            <button id="button" class="signin signup-form__submit">登录</button>
+            <a href="/signup" class="signup signup-form__submit">没有账号</a>
+            <div class="signup-form-nav">
+              <div class="left"></div>
+              <div class="right">
+                <a href="/reminder" target="_blank">忘记了</a>
+              </div>
+            </div>
+          </form>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <h1>请选择下载文件：</h1>
+    <% if(files.length>0) {%>
+    <ul>
+     <% files.forEach(function(file){ %>
+     <li>
+      <a href="/download/<%- file %>" target="_blank"><%- file %></a>
+    </li>
+    <%})%>
   </ul>
   <%} else {%>
   <p>没有可下载文件…</p>
   <%}%>
- </body>
+</div>
+</body>
+<script type="text/javascript">
+  $(document).ready(function(){
+
+  })
+</script>
+<link rel="stylesheet" type="text/css" href="https://source.pixiv.net/accounts/assets/bundle.css?7db5c2b8f618166493c1" >
 </html>
