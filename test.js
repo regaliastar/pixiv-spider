@@ -21,8 +21,8 @@ Util.getByTag('kiana',options);
 zip('kiana');*/
 var Util = require('./Util');
 var options = {
-	collection:1000
+	collection:500
 };
 
 
-Util.getGlobalRank();
+Util.getByTag('崩坏3',options);

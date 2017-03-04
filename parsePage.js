@@ -51,6 +51,8 @@ function parsePage(ID,originUrl,OPTIONS){
 				}
 				var $ = cheerio.load(res.body);
 
+				//得到作者ID
+				var authorId = $('.user-link').first().attr('href').split('=')[1]+'_';
 				//原始大小图片1400*1400
 				var oriImgUrl = $('img[class=original-image]').attr('data-src');
 				//图片后缀
@@ -60,9 +62,9 @@ function parsePage(ID,originUrl,OPTIONS){
 				//图片名称
 					var imgName = $('img[class=original-image]').attr('alt')+postfix || Date.now()+Math.random()*1000+postfix;
 					if(!OPTIONS){
-						download(oriImgUrl,imgName,ID);
+						download(oriImgUrl,authorId+imgName,ID);
 					}else{
-						download(oriImgUrl,imgName,ID+'/collection');
+						download(oriImgUrl,authorId+imgName,ID+'/collection');
 					}
 				}else{
 					var mutilName = $('.ui-expander-target').children('.title').text().formatFilename();
