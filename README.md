@@ -1,10 +1,13 @@
-# 基于 nodejs 的Pixiv(简称P站)爬虫
+# Pixiv(简称P站)爬虫
+
+<p align="left">
+	<img alt="" src="https://img.shields.io/badge/JavaScript-ES6-green.svg" />
+	<img alt="MIT" src="https://img.shields.io/npm/l/express.svg" />
+</p>
 
 ## 运行方式
 
-```
-node app
-```
+在根目录下 `npm install`,再 `node app`
 
 ## 依赖
 
