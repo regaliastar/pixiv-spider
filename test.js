@@ -19,14 +19,11 @@ Util.getByTag('kiana',options);
 /*var zip = require('./zip');
 
 zip('kiana');*/
-/*
+
 var Util = require('./Util');
 var options = {
 	collection:500
 };
 
-
-Util.getByTag('崩壊学園',options);*/
-var log = require('./log');
-log('0');
-log('1','2');
+Util.getGlobalRank();
+//Util.getByTag('崩壊学園',options);

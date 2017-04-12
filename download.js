@@ -34,8 +34,9 @@ function download(url,fn,author){
     var id= url.substring(url.lastIndexOf('/')+1,url.indexOf('_'));
 
     var filename = fn.formatFilename();
-    var reg = /i[0-9].pixiv.net/;
-    var host = reg.exec(url)[0];
+    var rep = /i.pximg.net/;
+    var host = rep.exec(url)[0];
+    
     var options = {
         url: url,
         headers: {
